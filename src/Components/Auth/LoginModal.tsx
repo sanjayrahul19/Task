@@ -26,8 +26,9 @@ const LoginModal = () => {
   const isAuth = useSelector((state: RootState) => state.auth.isAuthenticated);
   const errorMessage = useSelector((state: RootState) => state.auth.errorMessage);
 
+  // Handle toggle between login and sign-up views
   const handleToggle = () => {
-    setIsSignUp((pre) => !pre);
+    setIsSignUp((pre) => !pre); // Toggle between sign-up and login
     setFormData({
       email: "",
       password: "",
@@ -35,6 +36,7 @@ const LoginModal = () => {
     });
   };
 
+  // Handle changes in form input fields
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -43,17 +45,18 @@ const LoginModal = () => {
     }));
   };
 
+   // Validate the form inputs
   const validateForm = () => {
     const errors: { email?: string; password?: string; confirmPassword?: string } = {};
 
-    // Validate email
+    // Validate email format
     if (!formData.email) {
       errors.email = "Email is required";
     } else if (!emailRegex.test(formData.email)) {
       errors.email = "Invalid email format";
     }
 
-    // Validate password (only apply regex for sign-up)
+   // Validate password (only for sign-up)
     if (!formData.password) {
       errors.password = "Password is required";
     } else if (isSignUp && !passwordRegex.test(formData.password)) {
@@ -70,8 +73,8 @@ const LoginModal = () => {
       }
     }
 
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
+    setFormErrors(errors); // Set errors in state
+    return Object.keys(errors).length === 0; // Return true if no errors
   };
 
   // Handle form submission for login or signup
@@ -79,7 +82,7 @@ const LoginModal = () => {
     e.preventDefault();
     if (validateForm()) {
       if (isSignUp) {
-        // Dispatch sign-up action
+         // If sign-up, dispatch sign-up action
         dispatch(signup({ email: formData.email, password: formData.password }));
         setFormData({
           email: "",
@@ -87,7 +90,7 @@ const LoginModal = () => {
           confirmPassword: "",
         });
       } else {
-        // Dispatch login action
+        // If login, dispatch login action
         dispatch(login({ email: formData.email, password: formData.password }));
         setFormData({
           email: "",
@@ -98,9 +101,10 @@ const LoginModal = () => {
     }
   };
 
+   // Effect to navigate based on authentication status
   useEffect(() => {
     if (isAuth && !error) {
-      navigate(isSignUp ? "/login" : "/");
+      navigate(isSignUp ? "/login" : "/");  // Navigate to the appropriate route
     }
   }, [error, isAuth]);
 
@@ -113,6 +117,7 @@ const LoginModal = () => {
               {isSignUp ? "Create an account" : "Welcome back"}
             </h1>
 
+           {/* Form for login or sign-up */}
             <form className="mt-4 space-y-6 sm:mt-6" onSubmit={handleSubmit}>
               <div className="grid gap-6 sm:grid-cols-1">
                 <div>
@@ -171,6 +176,8 @@ const LoginModal = () => {
                   </p>
                 )}
               </div>
+
+               {/* Confirm Password Field (only for sign-up) */}
               {isSignUp && (
                 <div className="mt-6 relative">
                   <label
@@ -203,11 +210,15 @@ const LoginModal = () => {
                   )}
                 </div>
               )}
+
+               {/* Global error message */}
               {error && errorMessage && (
                 <p className="text-sm text-red-600 dark:text-red-400 mt-2 text-center">
                   {errorMessage}
                 </p>
               )}
+
+              {/* Submit Button */}
               <button
                 type="submit"
                 className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
@@ -216,6 +227,7 @@ const LoginModal = () => {
               </button>
             </form>
 
+           {/* Toggle between sign-up and login */}
             <div className="flex justify-center mt-4">
               {isSignUp ? (
                 <>

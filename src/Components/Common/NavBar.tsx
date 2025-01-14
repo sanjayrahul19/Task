@@ -6,14 +6,14 @@ import { logout } from "../../Redux/AuthSlice.tsx";
 
 const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false);
-  const user = useSelector((state: RootState) => state.auth.currentUser);
+  const user = useSelector((state: RootState) => state.auth.currentUser); //get current user
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogOut = () => {
     dispatch(logout());
     setShowDropdown(false);
-    navigate("/login");
+    navigate("/login");  //navigate to login page after logout
   };
 
   return (

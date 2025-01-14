@@ -7,14 +7,15 @@ import DetailItem from "../../Components/Movies/DetailItem.tsx";
 import { Award, Film, Globe, LinkIcon, Users } from "lucide-react";
 
 const MovieDetailsPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();  // Extracting the movie ID from the URL parameters
   const [movieDetails, setMovieDetails] = useState<MovieDetails | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
+   // Function to fetch movie details from API
   const fetchMovieDetails = async () => {
     setLoading(true);
     try {
-      const response = await getMovie(id);
+      const response = await getMovie(id); // Fetch movie details by ID
       if (response) {
         setMovieDetails(response?.data);
       }
@@ -25,13 +26,17 @@ const MovieDetailsPage = () => {
     }
   };
 
+   // UseEffect to fetch movie details when the component is mounted or the movie ID changes
   useEffect(() => {
     if (id) {
       fetchMovieDetails();
     }
   }, [id]);
 
+   // Show loading spinner while data is being fetched
   if (loading) return <Loader />;
+
+  // Display message if no movie details are found
   if (!movieDetails) return <div>No movie details found.</div>;
 
   return (
@@ -52,6 +57,7 @@ const MovieDetailsPage = () => {
 
         {/* Details Section */}
         <div className="space-y-8">
+          
           {/* Title and Basic Info */}
           <div className="space-y-4">
             <h2 className="text-4xl font-bold text-gray-800">{movieDetails?.title}</h2>

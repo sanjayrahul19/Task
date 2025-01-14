@@ -11,13 +11,13 @@ import { RootState } from "../../Redux/Store.ts";
 const Home = () => {
   const [movies, setMovies] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [moviesPerPage] = useState(8);
+  const [moviesPerPage] = useState(8); // Define how many movies per page
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedGenre, setSelectedGenre] = useState<string>("");
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true); // Track loading state
   const navigate = useNavigate();
-  const user = useSelector((state: RootState) => state.auth.currentUser);
+  const user = useSelector((state: RootState) => state.auth.currentUser);// Get current user from Redux
 
   const fetchMovies = async () => {
     try {
@@ -33,25 +33,28 @@ const Home = () => {
   };
 
   useEffect(() => {
-    fetchMovies();
+    fetchMovies(); // Fetch movies when the component is mounted
   }, []);
 
+  // Pagination calculations: Determine which movies to display based on the current page
   const indexOfLastMovie = currentPage * moviesPerPage;
   const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
   const currentMovies = movies
-    .filter((movie) => movie.title.toLowerCase().includes(searchQuery.toLowerCase()))
-    .filter((movie) => (selectedGenre ? movie.genre.includes(selectedGenre) : true))
-    .slice(indexOfFirstMovie, indexOfLastMovie);
+    .filter((movie) => movie.title.toLowerCase().includes(searchQuery.toLowerCase())) // Filter by search query
+    .filter((movie) => (selectedGenre ? movie.genre.includes(selectedGenre) : true))  // Filter by genre if selected
+    .slice(indexOfFirstMovie, indexOfLastMovie); // Slice the movies for pagination
 
+     // Handle previous page click
   const handlePrevious = () => {
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+      setCurrentPage(currentPage - 1); // Decrease page number if not on the first page
     }
   };
 
+   // Handle next page click
   const handleNext = () => {
     if (currentPage * moviesPerPage < movies.length) {
-      setCurrentPage(currentPage + 1);
+      setCurrentPage(currentPage + 1); // Increase page number if not on the last page
     }
   };
 
@@ -91,13 +94,12 @@ const Home = () => {
     }
   }, [user?.email]); // Re-run when userEmail changes
 
-  {
-    /* Loading Spinner */
-  }
+  // If still loading, show the loading spinner
   if (loading) return <Loader />;
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
+      
       {/* Search Bar Component */}
       <SearchBar
         searchQuery={searchQuery}
